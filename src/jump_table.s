@@ -4,7 +4,7 @@
 	.syntax unified
 	.text
 
-.word 0xA17B105
+.word 0xA170023
 
 	.org 0x00000014
 	b.w patch_GetDev_SN

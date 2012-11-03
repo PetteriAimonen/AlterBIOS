@@ -2,7 +2,7 @@
 #include "fatfs/diskio.h"
 #include "DS203/BIOS.h"
 
-#define VERSION "AlterBIOS 1.0"
+#define VERSION "AlterBIOS " COMMITID
 
 #define RGB(r, g, b) (((r)>>3)|(((g)>>2)<<5)|(((b)>>3)<<11))
 

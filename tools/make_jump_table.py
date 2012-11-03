@@ -14,7 +14,7 @@ print '\t.thumb'
 print '\t.syntax unified'
 print '\t.text'
 print
-print '.word 0xA17B105'
+print '.word 0xA17%04x' % max([i for f,i in functions])
 print
 
 for function, index in functions:

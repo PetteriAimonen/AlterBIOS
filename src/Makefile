@@ -7,6 +7,9 @@ NAME = ALTBIOS
 # Names of the object files (add all .c files you want to include)
 OBJS = jump_table.o ff.o fatfs_glue.o BIOS.o alterbios.o
 
+# Version number from GIT
+COMMITID := $(shell git describe --always || echo unknown)
+
 # Names of all header files included in the API
 API_HEADERS = fatfs/ff.h
 
@@ -37,7 +40,7 @@ endif
 CFLAGS += -mcpu=cortex-m3 -mthumb -mno-thumb-interwork
 
 # Optimization & debug settings
-CFLAGS += -fno-common -Os -g -std=gnu99 -DNDEBUG
+CFLAGS += -fno-common -Os -g -std=gnu99 -DNDEBUG -DCOMMITID=\"$(COMMITID)\"
 
 # Compiler warnings
 CFLAGS += -Wall -Werror -Wno-unused
