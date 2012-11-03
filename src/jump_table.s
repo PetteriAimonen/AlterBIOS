@@ -9,6 +9,21 @@
 	.org 0x00000014
 	b.w patch_GetDev_SN
 
+	.org 0x00000018
+	b.w patch_OpenFileWr
+
+	.org 0x0000001c
+	b.w patch_OpenFileRd
+
+	.org 0x00000020
+	b.w patch_ReadFileSec
+
+	.org 0x00000024
+	b.w patch_ProgFileSec
+
+	.org 0x00000028
+	b.w patch_CloseFile
+
 	.org 0x00000050
 	b.w f_open
 

@@ -5,7 +5,7 @@
 NAME = ALTBIOS
 
 # Names of the object files (add all .c files you want to include)
-OBJS = jump_table.o ff.o fatfs_glue.o BIOS.o alterbios.o bios_patch.o
+OBJS = jump_table.o ff.o fatfs_glue.o BIOS.o alterbios.o
 
 # Names of all header files included in the API
 API_HEADERS = fatfs/ff.h

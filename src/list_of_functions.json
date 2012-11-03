@@ -1,5 +1,10 @@
 {
     "patch_GetDev_SN": 5,
+    "patch_OpenFileWr": 6,
+    "patch_OpenFileRd": 7,
+    "patch_ReadFileSec": 8,
+    "patch_ProgFileSec": 9,
+    "patch_CloseFile": 10,
 
     "f_mount": -1,
     "f_open": 20, 
