@@ -102,7 +102,8 @@ jump_table.s: list_of_functions.json
 # These rules update the api export files.
 
 api: build/alterbios.s build/alterbios.h $(API_HEADERS) $(DEP_HEADERS)
-	cp --parents $^ ../api
+	cp --parents $(API_HEADERS) $(DEP_HEADERS) ../api
+	cp build/alterbios.s build/alterbios.h ../api
 
 build/alterbios.s: list_of_functions.json
 	python ../tools/make_export.py $< > $@
