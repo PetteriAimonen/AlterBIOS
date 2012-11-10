@@ -14,3 +14,13 @@ deploy: ALT_FULL.HEX
 	cp $< /mnt/dso
 	sync
 	umount /mnt/dso
+
+VERSION = $(shell git describe | tr -d '.-' | head -c 3)
+
+publish:
+	make clean all
+	make -C src api
+	cp ALT_FULL.HEX ALT_$(VERSION).HEX
+	
+	rm -f alterbios-api-$(VERSION).zip
+	cd api; zip -r ../alterbios-api-$(VERSION).zip *
