@@ -4,7 +4,7 @@
 	.syntax unified
 	.text
 
-.word 0xA170023
+.word 0xA170024
 
 	.org 0x00000014
 	b.w patch_GetDev_SN
@@ -71,4 +71,7 @@
 
 	.org 0x0000008c
 	b.w f_rename
+
+	.org 0x00000090
+	b.w f_flush
 

@@ -1,12 +1,11 @@
 {
-    "patch_GetDev_SN": 5,
-    "patch_OpenFileWr": 6,
-    "patch_OpenFileRd": 7,
-    "patch_ReadFileSec": 8,
-    "patch_ProgFileSec": 9,
-    "patch_CloseFile": 10,
-
-    "f_mount": -1,
+    "patch_GetDev_SN": 5, 
+    "patch_OpenFileWr": 6, 
+    "patch_OpenFileRd": 7, 
+    "patch_ReadFileSec": 8, 
+    "patch_ProgFileSec": 9, 
+    "patch_CloseFile": 10, 
+    "f_mount": -1, 
     "f_open": 20, 
     "f_read": 21, 
     "f_lseek": 22, 
@@ -33,5 +32,6 @@
     "f_puts": -1, 
     "f_printf": -1, 
     "f_gets": -1, 
-    "get_fattime": -1
+    "get_fattime": -1, 
+    "f_flush": 36
 }

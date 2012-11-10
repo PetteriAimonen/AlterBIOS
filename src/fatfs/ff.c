@@ -755,6 +755,7 @@ FRESULT move_window (
 
 
 
+
 /*-----------------------------------------------------------------------*/
 /* Clean-up cached data                                                  */
 /*-----------------------------------------------------------------------*/
@@ -792,7 +793,12 @@ FRESULT sync (	/* FR_OK: successful, FR_DISK_ERR: failed */
 }
 #endif
 
-
+/* Hackish function to deal with DSO Quad's simultaneous filesystem access. */
+void f_flush(FATFS *fs)
+{
+    sync(fs);
+    move_window(fs, 1);
+}
 
 
 /*-----------------------------------------------------------------------*/

@@ -98,3 +98,14 @@ collect: $(API_HEADERS:.h=.collect)
 
 jump_table.s: list_of_functions.json
 	python ../tools/make_jump_table.py $< > $@
+
+# These rules update the api export files.
+
+api: build/alterbios.s build/alterbios.h $(API_HEADERS) $(DEP_HEADERS)
+	cp --parents $^ ../api
+
+build/alterbios.s: list_of_functions.json
+	python ../tools/make_export.py $< > $@
+
+build/alterbios.h: list_of_functions.json
+	python ../tools/make_header.py $< > $@
