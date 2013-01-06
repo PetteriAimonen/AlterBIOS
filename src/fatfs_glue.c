@@ -123,6 +123,7 @@ DRESULT disk_write(BYTE drv, const BYTE *buff, DWORD sector, BYTE count)
         if (__ProgDiskPage((u8*)buff + 256, sector * 512 + 256) != 0)
             return RES_ERROR;
         
+        sector++;
         buff += 512;
     }
     
