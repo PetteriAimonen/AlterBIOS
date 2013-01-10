@@ -6,6 +6,9 @@
 
 .word 0xA170024
 
+	.org 0x00000004
+	b.w alterbios_init
+
 	.org 0x00000014
 	b.w patch_GetDev_SN
 

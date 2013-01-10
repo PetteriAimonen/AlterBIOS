@@ -1,4 +1,5 @@
 {
+    "alterbios_init": 1,
     "patch_GetDev_SN": 5, 
     "patch_OpenFileWr": 6, 
     "patch_OpenFileRd": 7, 

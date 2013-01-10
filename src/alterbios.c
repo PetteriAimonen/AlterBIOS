@@ -1,6 +1,7 @@
 #include "fatfs/ff.h"
 #include "fatfs/diskio.h"
 #include "DS203/BIOS.h"
+#include "stm32f10x.h"
 
 #define VERSION "AlterBIOS " COMMITID
 
@@ -34,6 +35,23 @@ void __Init_Data(void) {
 
 void alterbios_init()
 {
+    // We want to initialize exactly once after boot.
+    // Usually this is accomplished by hooking the GetDev_SN from the BIOS.
+    // However, if normal SYS is written over AlterBIOS, our BIOS hooks are
+    // gone. To maintain functionality of AlterBIOS-based programs, they
+    // should call this function also.
+    //
+    // To avoid double-initialization, we write a dummy value to a peripheral
+    // register. These registers are always cleared when system reset occurs,
+    // unlike RAM.
+    if (CRC->IDR == 0xA1)
+    {
+        return;
+    }
+    
+    RCC->AHBENR |= RCC_AHBENR_CRCEN;
+    CRC->IDR = 0xA1;
+    
     STATUS("Initializing");
  
     __Init_Data();

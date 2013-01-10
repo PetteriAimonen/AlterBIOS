@@ -29,5 +29,8 @@ static int alterbios_check()
     return (alterbios_version_tag & 0x0000FFFF);
 }
 
+/* Initialize AlterBIOS (basically mounts the FAT filesystem) */
+extern void alterbios_init();
+
 #endif
 ''' % len(functions)
