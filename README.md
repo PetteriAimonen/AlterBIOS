@@ -9,3 +9,5 @@ The original BIOS is open source, but requires IAR V5.0 to build.
 
 AlterBIOS approaches this problem from another direction. It installs into the extra flash on
 the processor, and patches the BIOS entrypoints to point into AlterBIOS instead.
+
+Download binaries [here](http://koti.kapsi.fi/~jpa/dsoquad/).
