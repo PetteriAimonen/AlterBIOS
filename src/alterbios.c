@@ -61,6 +61,13 @@ void alterbios_init()
     FRESULT status = f_mount(0, &fatfs);
     
     if (status == FR_OK)
+    {
+        /* Check that the filesystem really works */
+        DIR tmp;
+        status = f_opendir(&tmp, "/");
+    }
+
+    if (status == FR_OK)
         STATUS("OK");
     else
         STATUS("FatFS FAIL");

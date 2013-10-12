@@ -134,6 +134,7 @@ CH_D Trigger source & kind select =>
 #define DFUVER         14       // DFU version number of program modules
 #define SYSVER         15       // SYS version number of program modules
 #define FPGAVER        16       // FPGA configuration program version number
+#define DEVICEINFO     18
 
 // FPGA register addresses for Set_Param
 #define FPGA_SP_TRIGGMODE    0 // Note: resets other settings to defaults

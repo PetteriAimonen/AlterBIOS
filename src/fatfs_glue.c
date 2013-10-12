@@ -4,6 +4,36 @@
 #include "fatfs/diskio.h"
 #include "DS203/BIOS.h"
 #include "gpio.h"
+#include <stdbool.h>
+
+typedef enum {
+    FLASH_M25PE16 = 0,
+    FLASH_8M = 1 /* Winbond 25q64bvsig */
+} flash_type_t;
+
+flash_type_t g_flash_type = FLASH_M25PE16;
+bool g_invert = true;
+
+/* Flash chip abstraction */
+static int sectorlen()
+{
+    if (g_flash_type == FLASH_M25PE16)
+        return 512;
+    else if (g_flash_type == FLASH_8M)
+        return 4096;
+    else
+        return 512; /* Fallback */
+}
+
+static int sectorcount()
+{
+    if (g_flash_type == FLASH_M25PE16)
+        return 4096;
+    else if (g_flash_type == FLASH_8M)
+        return 2048;
+    else
+        return 0; /* Fallback */
+}
 
 /* SPI access routines */
 DECLARE_GPIO(cs, GPIOB, 7);
@@ -41,7 +71,12 @@ spi_recv_block(uint8_t *buffer, unsigned count)
         __disable_irq(); // Interrupt in here could cause RX overflow
         SPI3->DR = 0xFF;
         while (!(SPI3->SR & SPI_SR_RXNE));
-        *buffer++ = SPI3->DR ^ 0xFF; // DSO Quad stores the inverse of bytes
+        
+        if (g_invert)
+            *buffer++ = SPI3->DR ^ 0xFF; // SYS prior to 1.60 stores the inverse of bytes
+        else
+            *buffer++ = SPI3->DR;
+       
         __enable_irq();
     }
 }
@@ -93,8 +128,34 @@ static void read_flash(uint8_t *buffer, unsigned addr, unsigned count)
 
 DSTATUS disk_initialize(BYTE drv)
 {
-    // Supports only one drive, no initialization necessary.
-    return (drv == 0) ? 0 : STA_NOINIT;
+    if (drv != 0) return STA_NOINIT;
+
+    /* Check the flash type */
+    /* Code adapted from SYS_V1.60 */
+    uint8_t *ver = (uint8_t*)__Get(DFUVER);
+    int v = (ver[1] - '0') * 100 + (ver[3] - '0') * 10 + (ver[4] - '0');
+    
+    if (v <= 311)
+    {
+        g_flash_type = FLASH_M25PE16;
+    }
+    else
+    {
+        uint8_t *info = (uint8_t*)__Get(DEVICEINFO);
+        
+        if (info[0] == '8' && info[1] == 'M' && info[2] == 'B')
+            g_flash_type = FLASH_8M;
+        else
+            g_flash_type = FLASH_M25PE16;    
+    }
+    
+    /* Check flash inversion */
+    uint8_t buf[8];
+    read_flash(buf, 0, sizeof(buf));
+    if (buf[0] == 0x14 && buf[1] == 0xc3)
+        g_invert = false;
+    
+    return 0;
 }
 
 DSTATUS disk_status (BYTE drv)
@@ -106,7 +167,8 @@ DRESULT disk_read(BYTE drv, BYTE *buff, DWORD sector, BYTE count)
 {
     if (drv != 0 || count == 0) return RES_PARERR;
     
-    read_flash(buff, sector * 512, count * 512);
+    int s = sectorlen();
+    read_flash(buff, sector * s, count * s);
     
     return RES_OK;
 }
@@ -117,14 +179,23 @@ DRESULT disk_write(BYTE drv, const BYTE *buff, DWORD sector, BYTE count)
     
     while (count--)
     {
-        if (__ProgDiskPage((u8*)buff, sector * 512) != 0)
-            return RES_ERROR;
-        
-        if (__ProgDiskPage((u8*)buff + 256, sector * 512 + 256) != 0)
-            return RES_ERROR;
-        
-        sector++;
-        buff += 512;
+        if (g_flash_type == FLASH_M25PE16)
+        {
+            if (__ProgDiskPage((u8*)buff, sector * 512) != 0 ||
+                __ProgDiskPage((u8*)buff + 256, sector * 512 + 256) != 0)
+                return RES_ERROR;
+            
+            sector++;
+            buff += 512;
+        }
+        else if (g_flash_type == FLASH_8M)
+        {
+            if (__ProgDiskPage((u8*)buff, sector * 4096) != 0)
+                return RES_ERROR;
+            
+            sector++;
+            buff += 4096;
+        }
     }
     
     return RES_OK;
@@ -140,12 +211,12 @@ DRESULT disk_ioctl(BYTE drv, BYTE ctrl, void *buff)
     }
     else if (ctrl == GET_SECTOR_COUNT)
     {
-        *(DWORD*)buff = 4096;
+        *(DWORD*)buff = sectorcount();
         return RES_OK;
     }
     else if (ctrl == GET_SECTOR_SIZE || ctrl == GET_BLOCK_SIZE)
     {
-        *(DWORD*)buff = 512;
+        *(DWORD*)buff = sectorlen();
         return RES_OK;
     }
     else

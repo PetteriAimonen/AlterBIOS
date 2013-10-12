@@ -2,11 +2,8 @@ MEMORY
 {
     rom (rx) : ORIGIN = 0x08000000, LENGTH = 512K
     
-    /* The applications use  0x20002000 onwards.
-     * The default bios uses 0x20000000 to 0x20000FFF
-     * Therefore, we use 0x20001800 to 0x20001FFF
-     */
-    ram (rwx) : ORIGIN = 0x20001800, LENGTH = 2K
+    /* We use the top 5 KB of the extra RAM */
+    ram (rwx) : ORIGIN = 0x2000EC00, LENGTH = 5K
 }
 
 SECTIONS
