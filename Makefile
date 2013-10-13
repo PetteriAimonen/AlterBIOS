@@ -19,6 +19,8 @@ VERSION = $(shell git describe | tr -d '.-' | head -c 3)
 
 publish:
 	make clean all
+	rm -rf api
+	mkdir -p api
 	make -C src api
 	cp ALT_FULL.HEX ALT_$(VERSION).HEX
 	
