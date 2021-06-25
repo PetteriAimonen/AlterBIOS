@@ -162,7 +162,7 @@ u8 patch_ReadFileSec(u8* buffer, u16* cluster)
     }
     
     unsigned rcount;
-    FRESULT r = f_read(&g_file, buffer, 512, &rcount);
+    FRESULT r = f_read(&g_file, buffer, fatfs.ssize, &rcount);
     
     return ERR(r);
 }
@@ -170,9 +170,9 @@ u8 patch_ReadFileSec(u8* buffer, u16* cluster)
 u8 patch_ProgFileSec(u8* buffer, u16* cluster)
 {
     unsigned wcount;
-    FRESULT r = f_write(&g_file, buffer, 512, &wcount);
+    FRESULT r = f_write(&g_file, buffer, fatfs.ssize, &wcount);
     
-    if (wcount != 512)
+    if (wcount != fatfs.ssize)
         return 3; // Disk is full
     
     return ERR(r);
