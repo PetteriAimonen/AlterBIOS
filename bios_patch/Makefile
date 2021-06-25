@@ -2,10 +2,10 @@
 # Petteri Aimonen <jpa@dso.mail.kapsi.fi> 2012
 
 # BIOS image to patch
-ORIGINAL = SYS_B152.HEX
+ORIGINAL = SYS_B164.HEX
 
 # Output image
-OUTPUT = SYS_ALT.HEX
+OUTPUT = ALT_B164.HEX
 
 # Object files
 OBJS = bios_patch.o
@@ -50,7 +50,7 @@ $(OUTPUT): build/patched.bin
 	$(CP) -I binary -O ihex --adjust-vma=0x08004000 $< $@
 
 build/patched.bin: build/patch.bin build/orig.bin
-	python ../tools/combine.py $^ $@
+	python2 ../tools/combine.py $^ $@
 
 build/orig.bin: $(ORIGINAL)
 	$(CP) -I ihex -O binary $< $@
