@@ -5,7 +5,7 @@
 ORIGINAL = SYS_B164.HEX
 
 # Output image
-OUTPUT = ALT_B164.HEX
+OUTPUT = SYS_ALT.HEX
 
 # Object files
 OBJS = bios_patch.o
