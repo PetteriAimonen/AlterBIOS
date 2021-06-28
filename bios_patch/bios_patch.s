@@ -5,7 +5,7 @@
     .syntax unified
     
     .ifndef ALTERBIOS_BASE
-    .equ ALTERBIOS_BASE,0x08044000
+    .equ ALTERBIOS_BASE,0x08009400
     .endif
 
     .text
